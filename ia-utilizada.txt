@@ -1,0 +1,152 @@
+// Nombre de la herramienta de IA generativa empleada: ChatGPT
+// Cuenta gratuita o de pago: ChatGPT Plus
+// Prompt utilizado:
+//Estoy resolviendo un examen de Programación Avanzada en Java sobre procesamiento 
+concurrente de matrices. El ejercicio consiste en contar cuántas veces aparece una 
+palabra específica (por ejemplo, "Java") dentro de una matriz de Strings usando 
+concurrencia con hilos. 
+
+//Ya intenté resolverlo por mi cuenta, pero mi código tiene errores de escritura, 
+lógica y uso de concurrencia. Necesito que actúes como un profesor universitario 
+de Programación Avanzada y me ayudes sin reemplazar completamente mi razonamiento, 
+corrigiendo primero mis errores y explicandome qué hice mal y por qué. 
+
+// De acuerdo a mi código, puedo comprender que mi error esta en como definí las matrices,
+ me puedes explicar en que me equivoqué y como corregirlo? Mi matriz es la siguiente:
+matrizD[i][j] = ["Java", "Python", "Java"],
+                ["C++", "Java", "Go"],
+                ["Java", "Rust","Java"]; // 
+
+Sí, tu error principal está en que declaraste una cadena simple, no una matriz.
+Tú pusiste:
+
+String matrizD = "";
+
+Eso significa: “voy a guardar un solo texto”.
+Pero luego intentaste usarla así:
+
+matrizD[i][j]
+
+Eso solo funciona si matrizD es una matriz bidimensional, es decir:
+
+String[][] matrizD
+
+También te equivocaste al inicializarla. Esto no es válido en Java:
+
+matrizD[i][j] = ["Java", "Python", "Java"],
+                ["C++", "Java", "Go"],
+                ["Java", "Rust","Java"];
+
+En Java, una matriz de Strings se define así:
+
+String[][] matrizD = {
+        {"Java", "Python", "Java"},
+        {"C++", "Java", "Go"},
+        {"Java", "Rust", "Java"}
+}; 
+
+// Entiendo, mi error esta en la inicialización y declaración de la matriz, 
+sin embargo, creo que al momento de realizar el for tambien hay errores, 
+ya que estaban marcados como tal, me ayudas explicandome eso tambien? Por favor. 
+
+
+Sí, también hay errores en los for, y de hecho son importantes porque aunque 
+la matriz estuviera bien declarada, tu ciclo nunca habría recorrido nada.
+Veamos los errores:
+
+1. Uso incorrecto de separadores
+
+En Java, un for tiene esta estructura: Cada parte debe separarse con punto y coma (;), no con comas.
+Mejor práctica: no usar números fijos
+
+Tu condición fue: i > 3 Pero i empieza en 0.
+
+Entonces Java evalúa: 0 > 3
+
+Resultado: false
+
+Eso significa que el ciclo jamás inicia.
+
+Aunque 3 funciona porque sabes que tu matriz es 3x3, académicamente es mejor usar el tamaño real de la matriz. 
+Entonces la matriz quedaria asi: 
+for (int i = 0; i < matrizD.length; i++) {
+    for (int j = 0; j < matrizD[i].length; j++) { 
+// Entiendo,  con el > 3 nunca iba a entrar al ciclo
+
+// Código completo en base a las correcciones de la IA generativa:
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        String[][] matrizD = {
+                {"Java", "Python", "Java"},
+                {"C++", "Java", "Go"},
+                {"Java", "Rust", "Java"}
+        };
+
+        int contador = 0;
+
+        for (int i = 0; i < matrizD.length; i++) {
+            for (int j = 0; j < matrizD[i].length; j++) {
+                if (matrizD[i][j].equals("Java")) {
+                    contador++;
+                }
+            }
+        }
+
+        System.out.printf("Resultado Total: La palabra Java aparece %d veces%n", contador);
+    }
+}
+
+// Tambien tengo otro archivo llamado matrizDatos, en la que quiero que me ayudes a corregir lo que he hecho mal, 
+tengo un: public class matrizDatos extends Thread { en el que realice los siguiente: 
+
+    new Thread fila0 = new Thread("Hilo-0");
+    new Thread fila1 = new Thread("Hilo-1");
+    new Thread fila2 = new Thread("Hilo-2");
+
+    new Thread col0 = new Thread("Col0");
+    new Thread col1 = new Thread("Col1");
+    new Thread col2 = new Thread("Col2");
+
+Sí. Ahí tu idea va por buen camino, pero la forma de crear los hilos está mal escrita y además esos hilos no tienen ninguna tarea asignada.
+
+La forma correcta de declarar un objeto sería:
+
+Thread fila0 = new Thread("Hilo-0");
+
+Pero ojo: eso solo crea un hilo con nombre, no le dice qué debe hacer. Para que un hilo trabaje, debe tener código dentro de run().
+
+// Ok, entiendo, el error fue crear objetos Thread dentro de una clase que ya tiene la extensión Thread, y con esta parte: fila0.join();
+    fila1.join();
+    fila2.join();
+
+    col0.start();
+    col1.start();
+    col2.start();
+
+    try{
+        Thread.sleep(1000);
+    }catch(InterruptedException){}
+
+El primero es que join() y start() no pueden escribirse directamente dentro de la clase, 
+Además, join() se utiliza para esperar a que un hilo termine su ejecución. 
+
+// Código completo en base a las correcciones de la IA generativa:
+atrizDatos fila0 = new matrizDatos(matrizD[0], palabraBuscada, "Hilo-0");
+        matrizDatos fila1 = new matrizDatos(matrizD[1], palabraBuscada, "Hilo-1");
+        matrizDatos fila2 = new matrizDatos(matrizD[2], palabraBuscada, "Hilo-2");
+
+        fila0.start();
+        fila1.start();
+        fila2.start();
+
+        try {
+            fila0.join();
+            fila1.join();
+            fila2.join();
+        } catch (InterruptedException e) {
+            System.out.println("Error: el hilo principal fue interrumpido.");
+            Thread.currentThread().interrupt();
+        }
